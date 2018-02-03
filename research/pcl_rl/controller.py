@@ -203,9 +203,8 @@ class Controller(object):
       (initial_state,
        observations, actions, rewards,
        pads) = self._sample_episodes(sess, greedy=greedy)
-
-      observations = zip(*observations)
-      actions = zip(*actions)
+      observations = list(zip(*observations))
+      actions = list(zip(*actions))
 
       terminated = np.array(self.env.dones)
 

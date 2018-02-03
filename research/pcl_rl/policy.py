@@ -115,8 +115,8 @@ class Policy(object):
       else:
         act = tf.reshape(tf.multinomial(logits, 1), [-1])
     elif self.env_spec.is_box(act_type):
-      means = logits[:, :sampling_dim / 2]
-      std = logits[:, sampling_dim / 2:]
+      means = logits[:, :sampling_dim // 2]
+      std = logits[:, sampling_dim // 2:]
       if greedy:
         act = means
       else:
@@ -134,8 +134,8 @@ class Policy(object):
       entropy = tf.reduce_sum(
           -tf.nn.softmax(logits) * tf.nn.log_softmax(logits), -1)
     elif self.env_spec.is_box(act_type):
-      means = logits[:, :sampling_dim / 2]
-      std = logits[:, sampling_dim / 2:]
+      means = logits[:, :sampling_dim // 2]
+      std = logits[:, sampling_dim // 2:]
       entropy = tf.reduce_sum(
           0.5 * (1 + tf.log(2 * np.pi * tf.square(std))), -1)
     else:
@@ -157,8 +157,8 @@ class Policy(object):
           tf.stop_gradient(probs) *
           (tf.stop_gradient(log_probs) - log_probs), -1)
     elif self.env_spec.is_box(act_type):
-      means = logits[:, :sampling_dim / 2]
-      std = logits[:, sampling_dim / 2:]
+      means = logits[:, :sampling_dim // 2]
+      std = logits[:, sampling_dim // 2:]
       my_means = tf.stop_gradient(means)
       my_std = tf.stop_gradient(std)
       self_kl = tf.reduce_sum(
@@ -178,8 +178,8 @@ class Policy(object):
       act_log_prob = tf.reduce_sum(
           tf.one_hot(action, act_dim) * tf.nn.log_softmax(logits), -1)
     elif self.env_spec.is_box(act_type):
-      means = logits[:, :sampling_dim / 2]
-      std = logits[:, sampling_dim / 2:]
+      means = logits[:, :sampling_dim // 2]
+      std = logits[:, sampling_dim // 2:]
       act_log_prob = (- 0.5 * tf.log(2 * np.pi * tf.square(std))
                       - 0.5 * tf.square(action - means) / tf.square(std))
       act_log_prob = tf.reduce_sum(act_log_prob, -1)
@@ -249,10 +249,10 @@ class Policy(object):
         other_log_probs = tf.nn.log_softmax(single_other_logits)
         my_kl = tf.reduce_sum(my_probs * (my_log_probs - other_log_probs), -1)
       elif self.env_spec.is_box(act_type):
-        my_means = single_my_logits[:, :sampling_dim / 2]
-        my_std = single_my_logits[:, sampling_dim / 2:]
-        other_means = single_other_logits[:, :sampling_dim / 2]
-        other_std = single_other_logits[:, sampling_dim / 2:]
+        my_means = single_my_logits[:, :sampling_dim // 2]
+        my_std = single_my_logits[:, sampling_dim // 2:]
+        other_means = single_other_logits[:, :sampling_dim // 2]
+        other_std = single_other_logits[:, sampling_dim // 2:]
         my_kl = tf.reduce_sum(
             tf.log(other_std / my_std) +
             (tf.square(my_std) + tf.square(my_means - other_means)) /

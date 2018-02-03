@@ -77,6 +77,7 @@ class Model(object):
         assert False
 
     self.single_action = []
+    # import ipdb; ipdb.set_trace()
     for i, (action_dim, action_type) in \
         enumerate(self.env_spec.act_dims_and_types):
       if self.env_spec.is_discrete(action_type):
@@ -289,6 +290,7 @@ class Model(object):
                  self.pads: pads,
                  self.avg_episode_reward: avg_episode_reward,
                  self.greedy_episode_reward: greedy_episode_reward}
+    # import ipdb; ipdb.set_trace()
     for action_place, action in zip(self.actions, actions):
       feed_dict[action_place] = action
     for obs_place, obs in zip(self.observations, observations):
