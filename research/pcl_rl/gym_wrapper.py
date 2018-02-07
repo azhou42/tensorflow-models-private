@@ -25,9 +25,21 @@ import random
 from six.moves import xrange
 import env_spec
 
+from rllab.envs.gym_env import GymEnv
+from rllab.envs.mujoco.humanoid_env import HumanoidEnv
+from rllab.envs.mujoco.swimmer_env import SwimmerEnv
+from sandbox.rocky.tf.envs.base import TfEnv
+from rllab.envs.normalized_env import normalize
 
 def get_env(env_str):
-  return gym.make(env_str)
+  if env_str == "Humanoid-v1":
+    return TfEnv(normalize(HumanoidEnv()))
+  if env_str == "Swimmer-v1":
+    return TfEnv(normalize(SwimmerEnv()))
+  else:
+    return TfEnv(normalize(GymEnv(env_str)))
+    # return gym.make(env_str)
+
 
 
 class GymWrapper(object):
@@ -43,7 +55,7 @@ class GymWrapper(object):
     for seed in self.seeds:
       for _ in xrange(self.count):
         env = get_env(env_str)
-        env.seed(seed)
+        # env.seed(seed)
         if hasattr(env, 'last'):
           env.last = 100  # for algorithmic envs
         self.envs.append(env)
@@ -98,7 +110,6 @@ class GymWrapper(object):
       obs, reward, done, tt = env.step(action)
       obs = self.env_spec.convert_obs_to_list(obs)
       return obs, reward, done, tt
-
     actions = zip(*actions)
     outputs = [env_step(env, action)
                if not done else (self.env_spec.initial_obs(None), 0, True, None)
