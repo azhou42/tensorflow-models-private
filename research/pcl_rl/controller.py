@@ -32,10 +32,12 @@ gfile = tf.gfile
 FLAGS = flags.FLAGS
 
 
-def find_best_eps_lambda(rewards, lengths):
+def find_best_eps_lambda(rewards, lengths, max_divergence):
   """Find the best lambda given a desired epsilon = FLAGS.max_divergence."""
   # perhaps not the best way to do this
-  desired_div = FLAGS.max_divergence * np.mean(lengths)
+  if max_divergence is None:
+      max_divergence = FLAGS.max_divergence
+  desired_div = max_divergence * np.mean(lengths)
 
   def calc_divergence(eps_lambda):
     max_reward = np.max(rewards)
@@ -71,6 +73,7 @@ class Controller(object):
                unify_episodes=False,
                replay_batch_size=None,
                max_step=None,
+               max_divergence=None,
                cutoff_agent=1,
                save_trajectories_file=None,
                use_trust_region=False,
@@ -88,6 +91,7 @@ class Controller(object):
     self.unify_episodes = unify_episodes
     self.replay_batch_size = replay_batch_size
     self.max_step = max_step
+    self.max_divergence = max_divergence
     self.cutoff_agent = cutoff_agent
     self.save_trajectories_file = save_trajectories_file
     self.use_trust_region = use_trust_region
@@ -314,7 +318,7 @@ class Controller(object):
       episode_rewards = np.array(self.episode_rewards)
       episode_lengths = np.array(self.episode_lengths)
       eps_lambda = find_best_eps_lambda(
-          episode_rewards[-20:], episode_lengths[-20:])
+          episode_rewards[-20:], episode_lengths[-20:], self.max_divergence)
       sess.run(self.model.objective.assign_eps_lambda,
                feed_dict={self.model.objective.new_eps_lambda: eps_lambda})
 

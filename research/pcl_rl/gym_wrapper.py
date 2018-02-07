@@ -23,7 +23,7 @@ import numpy as np
 import random
 
 from six.moves import xrange
-import env_spec
+import pcl_rl.env_spec as env_spec
 
 
 def get_env(env_str):

@@ -23,7 +23,7 @@ samples with the same seed must be taken from the environment.
 
 import tensorflow as tf
 
-import objective
+import pcl_rl.objective as objective
 
 
 class Reinforce(objective.Objective):

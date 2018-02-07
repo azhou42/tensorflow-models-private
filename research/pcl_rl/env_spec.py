@@ -88,7 +88,6 @@ class EnvSpec(object):
 
     self.obs_dims_and_types = list(zip(self.obs_dims, self.obs_types))
     self.act_dims_and_types = list(zip(self.act_dims, self.act_types))
-    print([(a,b) for a,b in self.act_dims_and_types])
     self.total_obs_dim = sum(self.obs_dims)
     self.total_sampling_act_dim = sum(self.sampling_dim(dim, typ)
                                       for dim, typ in self.act_dims_and_types)
